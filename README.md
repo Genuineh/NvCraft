@@ -193,20 +193,7 @@ nvim
 NvCraft/
 ├── init.lua                    # 入口文件
 ├── lua/
-│   ├── core/                   # 核心系统（当前版本）
-│   │   ├── init.lua           # 核心初始化
-│   │   ├── runtime.lua        # 运行时管理
-│   │   ├── settings.lua       # 基础设置
-│   │   └── modules/           # 插件模块
-│   │       ├── base.lua       # 基础配置
-│   │       ├── neotree.lua    # 文件浏览器
-│   │       ├── lualine.lua    # 状态栏
-│   │       └── ...            # 其他模块
-│   ├── utils/                  # 工具函数
-│   │   ├── modules.lua        # 模块工具
-│   │   ├── plugin.lua         # 插件工具
-│   │   └── lsp.lua            # LSP 工具
-│   └── nvcraft/               # 新架构（规划中）
+│   └── nvcraft/
 │       ├── core/              # 核心系统
 │       │   ├── registry.lua   # 模块注册中心
 │       │   ├── loader.lua     # 模块加载器
@@ -263,7 +250,7 @@ NvCraft/
 
 NvCraft 支持多层级配置：
 
-1. **全局配置**: `~/.config/nvim/lua/core/`
+1. **全局配置**: `~/.config/nvim/lua/nvcraft/config/`
 2. **用户配置**: `~/.config/nvim/user/`（即将支持）
 3. **项目配置**: `.nvcraft/config.lua`（即将支持）
 
@@ -271,9 +258,8 @@ NvCraft 支持多层级配置：
 
 要自定义或添加新模块：
 
-1. 在 `lua/core/modules/` 创建新的 Lua 文件
-2. 在 `lua/core/init.lua` 的 `_modules` 表中添加模块名
-3. 重启 Neovim 或执行 `:Lazy reload`
+1. 在 `lua/nvcraft/modules/` 的相应分类目录下创建新的 Lua 文件
+2. 重启 Neovim，模块将被自动发现
 
 示例模块结构：
 
