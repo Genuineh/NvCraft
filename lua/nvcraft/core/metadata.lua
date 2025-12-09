@@ -25,6 +25,9 @@ function M.get_module_spec(module_name)
 	-- Ensure meta has some defaults too
 	module_spec.meta.enabled_by_default = module_spec.meta.enabled_by_default ~= false
 
+	-- Validate and provide defaults for compatibility flags
+	module_spec.compatibility = module_spec.compatibility or {}
+
 	return module_spec
 end
 

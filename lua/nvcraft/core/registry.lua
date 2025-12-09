@@ -68,6 +68,26 @@ function M.discover_modules()
 		end
 	end
 
+	-- Check for version compatibility
+	for module_name, spec in pairs(module_specs) do
+		for _, dep_name in ipairs(spec.dependencies) do
+			local dep_spec = module_specs[dep_name]
+			if dep_spec and not M.check_version_compatibility(spec, dep_spec) then
+				vim.notify(
+					"Version mismatch for module "
+						.. module_name
+						.. ": requires "
+						.. dep_name
+						.. " version "
+						.. (spec.dependency_versions[dep_name] or "any")
+						.. ", but found "
+						.. dep_spec.version,
+					vim.log.levels.WARN
+				)
+			end
+		end
+	end
+
 	-- Perform topological sort
 	local sorted_modules = topological_sort(dependencies)
 	if sorted_modules then
@@ -77,6 +97,18 @@ function M.discover_modules()
 		modules = discovered_modules
 		vim.notify("Could not sort modules by dependency, loading in default order.", vim.log.levels.WARN)
 	end
+end
+
+--- Checks if a dependent module's version is compatible.
+-- @param dependent_spec (table) The module spec that has the dependency.
+-- @param dependency_spec (table) The module spec of the dependency.
+-- @return (boolean) True if compatible, false otherwise.
+function M.check_version_compatibility(dependent_spec, dependency_spec)
+	local required_version = dependent_spec.dependency_versions and dependent_spec.dependency_versions[dependency_spec.name]
+	if not required_version then
+		return true -- No specific version required
+	end
+	return dependency_spec.version == required_version
 end
 
 function M.get_modules()
