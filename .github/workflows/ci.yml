@@ -1,12 +1,11 @@
 name: CI
 
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+    types: [ready_for_review]
 
 jobs:
   lint:
-    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +18,6 @@ jobs:
       - name: Run luacheck
         run: luacheck .
   style:
-    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
