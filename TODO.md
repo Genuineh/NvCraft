@@ -26,39 +26,39 @@
 ## 第二阶段：核心基础设施
 
 ### 2.1 模块系统重构
-- [ ] 创建模块注册中心 (`lua/nvcraft/core/registry.lua`)
-  - [ ] 模块自动发现机制
+- [x] 创建模块注册中心 (`lua/nvcraft/core/registry.lua`)
+  - [x] 模块自动发现机制
   - [ ] 模块依赖解析
   - [ ] 模块生命周期管理
   - [ ] 模块版本控制
   
-- [ ] 实现模块加载器 (`lua/nvcraft/core/loader.lua`)
+- [x] 实现模块加载器 (`lua/nvcraft/core/loader.lua`)
   - [ ] 懒加载优化
   - [ ] 错误处理与恢复
   - [ ] 模块热重载
   - [ ] 加载顺序管理
 
-- [ ] 设计模块元数据 (`lua/nvcraft/core/metadata.lua`)
+- [x] 设计模块元数据 (`lua/nvcraft/core/metadata.lua`)
   - [ ] 模块描述信息
   - [ ] 依赖声明
   - [ ] 配置 Schema
   - [ ] 兼容性标记
 
 ### 2.2 配置管理系统
-- [ ] 创建配置管理器 (`lua/nvcraft/config/manager.lua`)
+- [x] 创建配置管理器 (`lua/nvcraft/config/manager.lua`)
   - [ ] 分层配置支持（全局/用户/项目）
   - [ ] 配置验证
   - [ ] 配置迁移工具
   - [ ] 配置导出/导入
 
-- [ ] 实现配置存储 (`lua/nvcraft/config/storage.lua`)
+- [x] 实现配置存储 (`lua/nvcraft/config/storage.lua`)
   - [ ] JSON/YAML 格式支持
   - [ ] 配置文件监听
   - [ ] 自动备份机制
   - [ ] 配置版本历史
 
 ### 2.3 事件系统
-- [ ] 构建事件总线 (`lua/nvcraft/core/events.lua`)
+- [x] 构建事件总线 (`lua/nvcraft/core/events.lua`)
   - [ ] 事件发布订阅
   - [ ] 异步事件处理
   - [ ] 事件优先级
