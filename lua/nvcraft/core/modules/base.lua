@@ -1,4 +1,4 @@
-require("utils.modules")
+require("nvcraft.core.modules")
 local options = function()
 	local opt = vim.opt
 

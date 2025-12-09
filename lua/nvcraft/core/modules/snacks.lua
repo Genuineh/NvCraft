@@ -13,7 +13,7 @@ local dashboard_opt = {
 		{ action = ":FzfLua files cwd=~/github/ ", desc = " Find file in github", icon = " ", key = "fig" },
 		{
 			action = function()
-				local project = require("core.modules.project")
+				local project = require("nvcraft.core.modules.project")
 				project.pick_func()
 			end,
 			desc = " Projects",

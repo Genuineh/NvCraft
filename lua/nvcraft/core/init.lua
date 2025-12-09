@@ -65,7 +65,7 @@ function init_lazy(plugins)
 		})
 	end
 	vim.opt.rtp:prepend(lazypath)
-	require("utils.plugin").lazy_file()
+	require("nvcraft.core.plugin").lazy_file()
 	require("lazy").setup(plugins)
 end
 
@@ -105,7 +105,7 @@ local function init_base(basePlugin)
 end
 
 function M.Load(path)
-	local runtime = require("core.runtime")
+	local runtime = require("nvcraft.core.runtime")
 	runtime.setup(get_modules_names())
 	local modules_dir = path .. ".modules"
 	local ms = get_modules_names()

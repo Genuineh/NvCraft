@@ -73,8 +73,8 @@ return {
 	-- opts = opts_setup(),
 	opts = _opts,
 	config = function(_, opts)
-		local runtime = require("core.runtime")
-		local lsp = require("utils.lsp")
+		local runtime = require("nvcraft.core.runtime")
+		local lsp = require("nvcraft.core.lsp")
 		local fzf = require("fzf-lua")
 		local config = fzf.config
 		local actions = fzf.actions
