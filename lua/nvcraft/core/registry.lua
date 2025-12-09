@@ -47,16 +47,25 @@ local function topological_sort(dependencies)
 end
 
 function M.discover_modules()
-	local modules_path = "lua/nvcraft/core/modules"
-	local files = vim.fn.readdir(modules_path)
+    local modules_path = "lua/nvcraft/modules"
+    local discovered_modules = {}
 
-	local discovered_modules = {}
-	for _, file in ipairs(files) do
-		if file:match("%.lua$") then
-			local module_name = file:gsub("%.lua$", "")
-			table.insert(discovered_modules, module_name)
-		end
-	end
+    local function scan_dir(path)
+        local files = vim.fn.readdir(path)
+        for _, file in ipairs(files) do
+            local full_path = path .. "/" .. file
+            if file ~= "." and file ~= ".." then
+                if vim.fn.isdirectory(full_path) == 1 then
+                    scan_dir(full_path)
+                elseif file:match("%.lua$") then
+                    local module_name = full_path:gsub(modules_path .. "/", ""):gsub("%.lua$", ""):gsub("/", ".")
+                    table.insert(discovered_modules, module_name)
+                end
+            end
+        end
+    end
+
+    scan_dir(modules_path)
 
 	-- Build dependency graph
 	local dependencies = {}
