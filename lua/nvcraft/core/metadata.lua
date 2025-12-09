@@ -1,25 +1,31 @@
--- Basic metadata handler
 local M = {}
 
---- Gets the metadata for a specific module.
--- For now, this is a placeholder. A real implementation would require modules
--- to be structured in a way that metadata can be easily extracted.
+--- Fetches the full specification for a given module.
+-- This includes metadata, plugin definitions, setup functions, etc.
 -- @param module_name (string) The name of the module.
--- @return (table|nil) The metadata table, or nil if not found.
-function M.get_metadata(module_name)
-	local module_path = "nvcraft.modules." .. module_name
-	local ok, module = pcall(require, module_path)
+-- @return (table|nil) The module specification table, or nil if loading fails.
+function M.get_module_spec(module_name)
+	-- Corrected path to modules
+	local module_path = "nvcraft.core.modules." .. module_name
+	local ok, module_spec = pcall(require, module_path)
 
-	if ok and module.meta then
-		return module.meta
-	else
-		-- Fallback for old modules that don't have a meta table
-		return {
-			name = module_name,
-			description = "A NvCraft module.",
-			version = "0.1.0",
-		}
+	if not ok then
+		-- pcall failed, module has a syntax error or doesn't exist.
+		vim.notify("Failed to load module spec for: " .. module_name .. "\n" .. module_spec, vim.log.levels.ERROR)
+		return nil
 	end
+
+	-- Validate and provide defaults for critical fields
+	module_spec.name = module_spec.name or module_name
+	module_spec.version = module_spec.version or "0.1.0"
+	module_spec.dependencies = module_spec.dependencies or {}
+	module_spec.plugins = module_spec.plugins or {}
+	module_spec.meta = module_spec.meta or {}
+
+	-- Ensure meta has some defaults too
+	module_spec.meta.enabled_by_default = module_spec.meta.enabled_by_default ~= false
+
+	return module_spec
 end
 
 return M
