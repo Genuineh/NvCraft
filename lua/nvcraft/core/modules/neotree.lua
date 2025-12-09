@@ -144,7 +144,7 @@ return {
 		{
 			"<leader>e",
 			function()
-				local runtime = require("core.runtime")
+				local runtime = require("nvcraft.core.runtime")
 				if runtime.root == nil or runtime.root == "" then
 					print("No root")
 				end

@@ -1,7 +1,7 @@
 local roots = { "", "", "" }
 
 local toggle = function(num)
-	local root = require("core.runtime").root
+	local root = require("nvcraft.core.runtime").root
 	local t = require("toggleterm")
 	if roots[num] ~= root and roots[num] ~= "" then
 		t.exec("cd " .. root, num)

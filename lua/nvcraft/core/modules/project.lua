@@ -1,7 +1,7 @@
 local pick = nil
 
 local set_project_root = function(path)
-	local runtime = require("core.runtime")
+	local runtime = require("nvcraft.core.runtime")
 	runtime.set_project_root(path)
 end
 
@@ -19,7 +19,7 @@ local select = function(selected, opts)
 end
 
 pick = function()
-	local runtime = require("core.runtime")
+	local runtime = require("nvcraft.core.runtime")
 	if runtime.modules_has("fzf") then
 		local fzf_lua = require("fzf-lua")
 		-- local project = require("project_nvim.project")
