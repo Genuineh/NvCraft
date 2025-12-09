@@ -69,62 +69,62 @@
 ## 第三阶段：模块重构
 
 ### 3.1 模块分类与组织
-- [ ] **基础模块** (`lua/nvcraft/modules/base/`)
-  - [ ] `core.lua` - 核心设置
-  - [ ] `ui.lua` - UI 基础配置
-  - [ ] `keymaps.lua` - 按键映射
-  - [ ] `autocmds.lua` - 自动命令
+- [x] **基础模块** (`lua/nvcraft/modules/base/`)
+  - [x] `core.lua` - 核心设置
+  - [x] `ui.lua` - UI 基础配置
+  - [x] `keymaps.lua` - 按键映射
+  - [x] `autocmds.lua` - 自动命令
 
-- [ ] **编辑增强** (`lua/nvcraft/modules/editor/`)
-  - [ ] `completion.lua` - 代码补全 (blink.cmp)
-  - [ ] `snippets.lua` - 代码片段
-  - [ ] `autopairs.lua` - 自动配对
-  - [ ] `comment.lua` - 注释增强
-  - [ ] `flash.lua` - 快速跳转
-  - [ ] `illuminate.lua` - 符号高亮
+- [x] **编辑增强** (`lua/nvcraft/modules/editor/`)
+  - [x] `completion.lua` - 代码补全 (blink.cmp)
+  - [x] `snippets.lua` - 代码片段
+  - [x] `autopairs.lua` - 自动配对
+  - [x] `comment.lua` - 注释增强
+  - [x] `flash.lua` - 快速跳转
+  - [x] `illuminate.lua` - 符号高亮
 
-- [ ] **语言支持** (`lua/nvcraft/modules/lsp/`)
-  - [ ] `mason.lua` - LSP 安装管理
-  - [ ] `servers.lua` - LSP 服务器配置
-  - [ ] `formatter.lua` - 代码格式化 (conform)
-  - [ ] `linter.lua` - 代码检查 (nvim-lint)
-  - [ ] `dap.lua` - 调试适配器
+- [x] **语言支持** (`lua/nvcraft/modules/lsp/`)
+  - [x] `mason.lua` - LSP 安装管理
+  - [x] `servers.lua` - LSP 服务器配置
+  - [x] `formatter.lua` - 代码格式化 (conform)
+  - [x] `linter.lua` - 代码检查 (nvim-lint)
+  - [x] `dap.lua` - 调试适配器
 
-- [ ] **UI 组件** (`lua/nvcraft/modules/ui/`)
-  - [ ] `statusline.lua` - 状态栏 (lualine)
-  - [ ] `bufferline.lua` - 缓冲区行
-  - [ ] `notify.lua` - 通知系统
-  - [ ] `noice.lua` - 命令行增强
-  - [ ] `icons.lua` - 图标系统 (mini.icons)
-  - [ ] `colorscheme.lua` - 主题管理
+- [x] **UI 组件** (`lua/nvcraft/modules/ui/`)
+  - [x] `statusline.lua` - 状态栏 (lualine)
+  - [x] `bufferline.lua` - 缓冲区行
+  - [x] `notify.lua` - 通知系统
+  - [x] `noice.lua` - 命令行增强
+  - [x] `icons.lua` - 图标系统 (mini.icons)
+  - [x] `colorscheme.lua` - 主题管理
 
-- [ ] **文件管理** (`lua/nvcraft/modules/files/`)
-  - [ ] `explorer.lua` - 文件浏览器 (neo-tree)
-  - [ ] `fuzzy.lua` - 模糊查找 (fzf)
-  - [ ] `project.lua` - 项目管理
-  - [ ] `spectre.lua` - 搜索替换
+- [x] **文件管理** (`lua/nvcraft/modules/files/`)
+  - [x] `explorer.lua` - 文件浏览器 (neo-tree)
+  - [x] `fuzzy.lua` - 模糊查找 (fzf)
+  - [x] `project.lua` - 项目管理
+  - [x] `spectre.lua` - 搜索替换
 
-- [ ] **Git 集成** (`lua/nvcraft/modules/git/`)
-  - [ ] `signs.lua` - Git 标记 (gitsigns)
-  - [ ] `lazygit.lua` - Git UI
-  - [ ] `diff.lua` - 差异比较
+- [x] **Git 集成** (`lua/nvcraft/modules/git/`)
+  - [x] `signs.lua` - Git 标记 (gitsigns)
+  - [x] `lazygit.lua` - Git UI
+  - [x] `diff.lua` - 差异比较
 
-- [ ] **工具集成** (`lua/nvcraft/modules/tools/`)
-  - [ ] `terminal.lua` - 终端集成 (toggleterm)
-  - [ ] `testing.lua` - 测试运行 (neotest)
-  - [ ] `trouble.lua` - 诊断面板
-  - [ ] `outline.lua` - 代码大纲
-  - [ ] `markdown.lua` - Markdown 支持
-  - [ ] `images.lua` - 图片预览
+- [x] **工具集成** (`lua/nvcraft/modules/tools/`)
+  - [x] `terminal.lua` - 终端集成 (toggleterm)
+  - [x] `testing.lua` - 测试运行 (neotest)
+  - [x] `trouble.lua` - 诊断面板
+  - [x] `outline.lua` - 代码大纲
+  - [x] `markdown.lua` - Markdown 支持
+  - [x] `images.lua` - 图片预览
 
-- [ ] **AI 助手** (`lua/nvcraft/modules/ai/`)
-  - [ ] `avante.lua` - AI 代码助手
-  - [ ] `copilot.lua` - GitHub Copilot (可选)
+- [x] **AI 助手** (`lua/nvcraft/modules/ai/`)
+  - [x] `avante.lua` - AI 代码助手
+  - [x] `copilot.lua` - GitHub Copilot (可选)
 
-- [ ] **专用工具** (`lua/nvcraft/modules/specialized/`)
-  - [ ] `flutter.lua` - Flutter 开发
-  - [ ] `obsidian.lua` - Obsidian 笔记
-  - [ ] 其他语言特定工具
+- [x] **专用工具** (`lua/nvcraft/modules/specialized/`)
+  - [x] `flutter.lua` - Flutter 开发
+  - [x] `obsidian.lua` - Obsidian 笔记
+  - [x] 其他语言特定工具
 
 ### 3.2 统一模块接口
 - [ ] 定义标准模块结构
