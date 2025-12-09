@@ -16,14 +16,14 @@ local function init_lazy(plugins)
 	require("lazy").setup(plugins)
 end
 
-function M.Load(path)
+function M.Load()
 	-- 1. Discover modules
 	local registry = require("nvcraft.core.registry")
 	registry.setup()
 
 	-- 2. Load modules and collect plugins
 	local loader = require("nvcraft.core.loader")
-	local plugins = loader.load_modules(path)
+	local plugins = loader.load_modules()
 
 	-- 3. Initialize lazy.nvim with the collected plugins
 	init_lazy(plugins)
