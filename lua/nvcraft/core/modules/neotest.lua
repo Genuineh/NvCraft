@@ -14,7 +14,7 @@ local get_go_test_args = function()
 			end
 		end
 	end
-	for k, v in pairs(custom_args) do
+	for _, v in pairs(custom_args) do
 		table.insert(default, v)
 	end
 	return default

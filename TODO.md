@@ -16,10 +16,10 @@
 
 ### 1.2 架构设计
 - [x] 设计新的目录结构
-- [ ] 定义模块接口标准
-- [ ] 设计配置文件格式
-- [ ] 规划插件管理系统
-- [ ] 设计元数据系统
+- [x] 定义模块接口标准 (参见 [docs/architecture/module-interface.md](docs/architecture/module-interface.md))
+- [x] 设计配置文件格式 (参见 [docs/architecture/config-format.md](docs/architecture/config-format.md))
+- [x] 规划插件管理系统 (参见 [docs/architecture/plugin-management.md](docs/architecture/plugin-management.md))
+- [x] 设计元数据系统 (参见 [docs/architecture/metadata-system.md](docs/architecture/metadata-system.md))
 
 ---
 

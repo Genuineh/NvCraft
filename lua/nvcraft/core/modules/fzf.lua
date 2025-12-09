@@ -1,3 +1,5 @@
+local lsp = require("nvcraft.core.lsp")
+
 local _opts = {
 	"default-title",
 	fzf_colors = true,
@@ -74,7 +76,6 @@ return {
 	opts = _opts,
 	config = function(_, opts)
 		local runtime = require("nvcraft.core.runtime")
-		local lsp = require("nvcraft.core.lsp")
 		local fzf = require("fzf-lua")
 		local config = fzf.config
 		local actions = fzf.actions

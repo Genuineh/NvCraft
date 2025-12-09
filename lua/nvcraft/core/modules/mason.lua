@@ -1,10 +1,10 @@
 local default_on_attach = function(client, buf)
 	-- Enable completion triggered by <c-x><c-o>
 	-- vim.bo[buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-	-- { "gd", "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Definition", has = "definition" },
-	-- { "gr", "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>", desc = "References", nowait = true },
+	-- { "gd", "<cmd>FzfLua lsp_definitions jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Definition" },
+	-- { "gr", "<cmd>FzfLua lsp_references jump_to_single_result=true ignore_current_line=true<cr>", desc = "References" },
 	-- { "gI", "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Implementation" },
-	-- { "gy", "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
+	-- { "gy", "<cmd>FzfLua lsp_typedefs jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
 	-- Buffer local mappings.
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	local opts = { buffer = buf }
@@ -96,9 +96,9 @@ local default_on_attach = function(client, buf)
 				end
 
 				local buffers = vim.lsp.get_buffers_by_client_id(client.request)
-				for _, buf in ipairs(buffers) do
-					local params = { textDocument = vim.lsp.util.make_text_document_params(buf) }
-					client:request("textDocument/diagnostic", params, nil, buf)
+				for _, buffer_id in ipairs(buffers) do
+					local params = { textDocument = vim.lsp.util.make_text_document_params(buffer_id) }
+					client:request("textDocument/diagnostic", params, nil, buffer_id)
 				end
 			end,
 		})
