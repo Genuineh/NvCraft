@@ -5,15 +5,13 @@ local M = {}
 -- @param file_path (string) The full path to the JSON file.
 -- @return (table|nil) The decoded Lua table, or nil if an error occurs.
 function M.read_config(file_path)
-	local content = ""
 	local file = io.open(file_path, "r")
-
-	if file then
-		content = file:read("*a")
-		file:close()
-	else
+  if not file then
 		return nil -- File doesn't exist or is not readable
 	end
+
+  local content = file:read("*a")
+  file:close()
 
 	if content == "" then
 		return {} -- Return empty table for empty file
