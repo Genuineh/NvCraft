@@ -3,6 +3,9 @@ local M = {}
 
 local storage = require("nvcraft.config.storage")
 local util = require("nvcraft.util")
+local schema_def = require("nvcraft.config.schema")
+local validator = require("schema-validation").new()
+local migration = require("nvcraft.config.migration")
 
 -- Configuration file paths
 local config_paths = {
@@ -32,6 +35,13 @@ function M.load_config()
   local user_config = storage.read_config(config_paths.user) or {}
   local project_config = storage.read_config(config_paths.project) or {}
 
+  -- Run migrations on the user's config before merging
+  local user_config_migrated = migration.migrate_config(user_config)
+  if user_config_migrated ~= user_config then
+    storage.write_config(config_paths.user, user_config_migrated)
+    user_config = user_config_migrated
+  end
+
   -- The order of merging is important: project > user > global > defaults
   local merged_config = util.deep_merge(default_config, global_config)
   merged_config = util.deep_merge(merged_config, user_config)
@@ -44,7 +54,22 @@ function M.load_config()
     -- For now, we'll just log the error and continue with the possibly invalid config.
   end
 
+  -- Start watching config files for changes
+  M.watch_config_files()
+
   return config_cache
+end
+
+--- Callback function for reloading the config when a file changes.
+local function on_config_change(file_path)
+  vim.notify("Configuration file changed: " .. file_path .. ". Reloading...", vim.log.levels.INFO)
+  M.load_config()
+end
+
+--- Starts watching the user and project config files.
+function M.watch_config_files()
+  storage.watch_file(config_paths.user, on_config_change)
+  storage.watch_file(config_paths.project, on_config_change)
 end
 
 --- Gets the configuration for a specific module, or the entire config.
@@ -70,19 +95,22 @@ function M.set_config(module_name, module_config)
   local user_conf = storage.read_config(config_paths.user) or {}
   user_conf[module_name] = module_config
   storage.write_config(config_paths.user, user_conf)
-  M.load_config() -- Reload config to apply changes
+  -- No need to explicitly reload; the file watcher will handle it.
 end
 
---- Validates the configuration.
--- For now, this is a basic check. A schema-based validation is planned.
+--- Validates the configuration against the defined schema.
 -- @param config (table) The configuration to validate.
 -- @return (boolean) True if the config is valid, false otherwise.
 function M.validate_config(config)
-  if type(config) ~= "table" then
+  local ok, errors = validator:validate(config, schema_def.schema)
+  if not ok then
+    local error_messages = {}
+    for _, err in ipairs(errors) do
+      table.insert(error_messages, string.format("- %s: %s", err.path, err.message))
+    end
+    vim.notify("Configuration validation failed:\n" .. table.concat(error_messages, "\n"), vim.log.levels.ERROR)
     return false
   end
-  -- TODO: Implement schema-based validation.
-  -- For now, we're just checking that the top-level config is a table.
   return true
 end
 

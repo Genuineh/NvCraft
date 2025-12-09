@@ -47,15 +47,15 @@
 ### 2.2 配置管理系统
 - [x] 创建配置管理器 (`lua/nvcraft/config/manager.lua`)
   - [x] 分层配置支持（全局/用户/项目）
-  - [ ] 配置验证 (基本实现，待 schema)
-  - [ ] 配置迁移工具
+  - [x] 配置验证 (基本实现，待 schema)
+  - [x] 配置迁移工具
   - [x] 配置导出/导入
 
 - [x] 实现配置存储 (`lua/nvcraft/config/storage.lua`)
   - [x] JSON/YAML 格式支持
-  - [ ] 配置文件监听
+  - [x] 配置文件监听
   - [x] 自动备份机制
-  - [ ] 配置版本历史
+  - [x] 配置版本历史
 
 ### 2.3 事件系统
 - [x] 构建事件总线 (`lua/nvcraft/core/events.lua`)

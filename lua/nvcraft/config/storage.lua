@@ -61,6 +61,24 @@ function M.read_config(file_path)
   end
 end
 
+--- Saves the current version of a file to a history directory.
+-- @param file_path (string) The full path to the file to save.
+local function save_to_history(file_path)
+  if vim.fn.filereadable(file_path) ~= 1 then
+    return
+  end
+
+  local dir = vim.fn.fnamemodify(file_path, ":h")
+  local filename = vim.fn.fnamemodify(file_path, ":t")
+  local history_dir = dir .. "/.history"
+  vim.fn.mkdir(history_dir, "p")
+
+  local timestamp = os.date("!%Y-%m-%dT%H-%M-%S")
+  local history_path = string.format("%s/%s.%s", history_dir, timestamp, filename)
+
+  vim.fn.copy(file_path, history_path)
+end
+
 --- Encodes a Lua table and writes it to a file.
 -- @param file_path (string) The full path to the JSON or YAML file.
 -- @param config (table) The Lua table to encode and write.
@@ -69,6 +87,7 @@ function M.write_config(file_path, config)
   -- Backup existing file before writing
   if vim.fn.filereadable(file_path) == 1 then
     backup_file(file_path)
+    save_to_history(file_path .. ".bak") -- Save the backed-up version
   end
 
   local file_type = get_file_type(file_path)
@@ -96,6 +115,31 @@ function M.write_config(file_path, config)
   else
     vim.notify("Failed to open file for writing: " .. file_path, vim.log.levels.ERROR)
     return false
+  end
+end
+
+local watched_files = {}
+
+--- Watches a file for changes and triggers a callback.
+-- @param file_path (string) The path to the file to watch.
+-- @param callback (function) The function to call when the file changes.
+function M.watch_file(file_path, callback)
+  if not watched_files[file_path] then
+    local poll_handle = vim.loop.new_fs_poll()
+    if poll_handle then
+      watched_files[file_path] = poll_handle
+      poll_handle:start(file_path, 1000, function(err, stat)
+        if err then
+          -- File might have been deleted, stop watching
+          poll_handle:stop()
+          watched_files[file_path] = nil
+        else
+          callback(file_path)
+        end
+      end)
+    else
+      vim.notify("Could not create fs_poll handle for: " .. file_path, vim.log.levels.ERROR)
+    end
   end
 end
 
