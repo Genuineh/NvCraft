@@ -396,6 +396,7 @@
 ## 技术债务与优化
 
 ### 待解决问题
+- [ ] 修复 `colorshceme.lua` 文件名拼写错误（应为 `colorscheme.lua`）
 - [ ] 移除硬编码路径 (`lua/core/settings.lua`)
 - [ ] 统一错误处理机制
 - [ ] 改进日志系统

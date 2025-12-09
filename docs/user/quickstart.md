@@ -239,6 +239,8 @@ NvCraft 使用 Mason 管理 LSP 服务器。
 
 编辑 `lua/core/modules/colorshceme.lua` 来更改主题。
 
+> **注意**: 文件名中有拼写错误（colorshceme），这将在未来的重构中修正。
+
 ### 可用主题
 - Catppuccin (默认)
 - TokyoNight
