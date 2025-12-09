@@ -1,23 +1,18 @@
 -- 复杂模块示例
 -- 演示包含快捷键、自动命令和依赖的完整模块
-
 return {
     -- 主插件
     "nvim-neo-tree/neo-tree.nvim",
-    
     -- 分支
     branch = "v3.x",
-    
     -- 依赖项
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-tree/nvim-web-devicons",
         "MunifTanjim/nui.nvim",
     },
-    
     -- 命令触发懒加载
     cmd = "Neotree",
-    
     -- 快捷键配置
     keys = {
         {
@@ -35,7 +30,6 @@ return {
             desc = "Git 状态浏览"
         },
     },
-    
     -- 配置选项
     opts = {
         filesystem = {
@@ -49,11 +43,9 @@ return {
             width = 40,
         },
     },
-    
     -- 配置函数
     config = function(_, opts)
         require("neo-tree").setup(opts)
-        
         -- 添加自动命令
         vim.api.nvim_create_autocmd("BufEnter", {
             group = vim.api.nvim_create_augroup("NeoTreeInit", { clear = true }),
@@ -66,7 +58,6 @@ return {
         })
     end,
 }
-
 --[[
 这个示例展示了：
 1. 完整的插件配置
@@ -74,6 +65,5 @@ return {
 3. 快捷键绑定
 4. 配置函数中的自动命令
 5. 条件加载逻辑
-
 这种结构适合需要复杂配置的插件。
 --]]

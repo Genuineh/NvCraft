@@ -91,7 +91,6 @@ local function get_modules(path, modules)
 		if modules[i] == "base" then
 			base = require(m_path)
 		else
-			local m_path = path .. "." .. modules[i]
 			local m = require(m_path)
 			table.insert(res, m)
 		end

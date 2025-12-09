@@ -137,7 +137,7 @@ local setup = function()
 	}
 end
 
-local uiSetup = function(_, opts)
+local uiSetup = function()
 	--like
 	--require("nvim-tree").setup({
 	-- })
