@@ -1,23 +1,25 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   lint:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Lua
-        uses: leafo/gh-actions-lua@v9
-        with:
-          luaVersion: "5.1"
-      - name: Set up Luarocks
-        uses: leafo/gh-actions-luarocks@v4
+      - name: Set up Lua and Luarocks
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1 luarocks
       - name: Install luacheck
-        run: luarocks install luacheck
+        run: sudo luarocks install luacheck
       - name: Run luacheck
         run: luacheck .
   style:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
