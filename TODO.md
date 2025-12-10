@@ -169,18 +169,18 @@
 ## 第四阶段：可视化管理系统
 
 ### 4.1 模块管理界面
-- [ ] 创建可视化插件管理器 (`lua/nvcraft/ui/module_manager.lua`)
-  - [ ] 模块列表展示
-  - [ ] 模块启用/禁用
-  - [ ] 模块配置编辑
-  - [ ] 模块搜索过滤
-  - [ ] 模块依赖可视化
+- [x] 创建可视化插件管理器 (`lua/nvcraft/ui/module_manager.lua`)
+  - [x] 模块列表展示
+  - [x] 模块启用/禁用
+  - [x] 模块配置编辑
+  - [x] 模块搜索过滤
+  - [x] 模块依赖可视化
 
-- [ ] 实现配置编辑器 (`lua/nvcraft/ui/config_editor.lua`)
-  - [ ] 图形化配置界面
-  - [ ] 实时预览
-  - [ ] 配置验证提示
-  - [ ] 配置模板
+- [x] 实现配置编辑器 (`lua/nvcraft/ui/config_editor.lua`)
+  - [x] 图形化配置界面
+  - [x] 实时预览
+  - [x] 配置验证提示
+  - [x] 配置模板
 
 ### 4.2 仪表盘系统
 - [ ] 创建主仪表盘 (`lua/nvcraft/ui/dashboard.lua`)
