@@ -58,4 +58,18 @@ function M.show_suggestions()
   end
 end
 
+--- Manages plugin cache, offering options to clean it.
+-- @param action string Can be "clean" to clear the cache.
+function M.manage_cache(action)
+  if action == "clean" then
+    if package.loaded["lazy"] then
+      require("lazy").clean()
+      vim.notify("Cleared lazy.nvim cache.", vim.log.levels.INFO, { title = "NvCraft Optimizer" })
+    else
+      vim.notify("lazy.nvim is not available to clean.", vim.log.levels.WARN, { title = "NvCraft Optimizer" })
+    end
+  end
+end
+
+
 return M
