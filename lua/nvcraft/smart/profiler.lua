@@ -5,9 +5,23 @@ local M = {}
 function M.get_performance_report()
   local report = {
     startup_time = "N/A",
+    memory_usage = "N/A",
     plugin_times = {},
     slow_plugins = {},
   }
+
+  -- Get memory usage (works on Linux/macOS)
+  if vim.fn.has("win32") == 0 then
+    local pid = vim.fn.getpid()
+    local mem_command = "ps -o rss= -p " .. pid .. " 2>/dev/null"
+    local mem_output = vim.fn.system(mem_command)
+    if vim.v.shell_error == 0 and mem_output then
+      local mem_kb = tonumber(vim.fn.trim(mem_output))
+      if mem_kb then
+        report.memory_usage = string.format("%.2f MB", mem_kb / 1024)
+      end
+    end
+  end
 
   -- Calculate total startup time
   if vim.g.nvcraft_start_time then
@@ -59,7 +73,8 @@ function M.show_report()
   local report = M.get_performance_report()
   local lines = { "--- NvCraft Performance Report ---", "" }
 
-  table.insert(lines, "Startup Time: " .. report.startup_time)
+  table.insert(lines, string.format("Startup Time: %s", report.startup_time))
+  table.insert(lines, string.format("Memory Usage: %s", report.memory_usage))
   table.insert(lines, "")
 
   if #report.slow_plugins > 0 then

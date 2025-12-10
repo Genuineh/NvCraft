@@ -106,4 +106,85 @@ function M.detect_languages()
   return sorted_langs
 end
 
+--- Safely reads and decodes a JSON file.
+-- @param file_path string The path to the JSON file.
+-- @return table|nil The decoded table, or nil if an error occurs.
+local function safe_read_json(file_path)
+  local ok, content = pcall(function()
+    return vim.fn.readfile(file_path)
+  end)
+  if not ok or not content then
+    return nil
+  end
+
+  local json_string = table.concat(content, "\n")
+  local decoded
+  ok, decoded = pcall(vim.fn.json_decode, json_string)
+  if not ok then
+    return nil
+  end
+  return decoded
+end
+
+
+--- Detects common development dependencies in project configuration files.
+-- @return table A list of detected dependency names (e.g., {"eslint", "pytest"}).
+function M.detect_dependencies()
+  local dependencies = {}
+  local cwd = vim.fn.getcwd()
+
+  -- Check package.json for Node.js dependencies
+  local package_json_path = cwd .. "/package.json"
+  if vim.fn.filereadable(package_json_path) == 1 then
+    local package_data = safe_read_json(package_json_path)
+    if package_data then
+      local deps = package_data.dependencies or {}
+      local dev_deps = package_data.devDependencies or {}
+      local all_deps = vim.tbl_extend("force", deps, dev_deps)
+      if all_deps.eslint then
+        table.insert(dependencies, "eslint")
+      end
+      if all_deps.prettier then
+        table.insert(dependencies, "prettier")
+      end
+      if all_deps.jest then
+        table.insert(dependencies, "jest")
+      end
+    end
+  end
+
+  -- Check pyproject.toml for Python dependencies (simple string search)
+  local pyproject_toml_path = cwd .. "/pyproject.toml"
+  if vim.fn.filereadable(pyproject_toml_path) == 1 then
+    local content = vim.fn.readfile(pyproject_toml_path)
+    local content_str = table.concat(content, "\n")
+    if content_str:match("pytest") then
+      table.insert(dependencies, "pytest")
+    end
+    if content_str:match("black") then
+      table.insert(dependencies, "black")
+    end
+  end
+
+
+  return dependencies
+end
+
+
+--- Detects available toolchains in the system path.
+-- @return table A list of detected tool names (e.g., {"node", "go"}).
+function M.detect_toolchain()
+  local tools = {}
+  local tool_candidates = { "node", "go", "rustc", "python", "python3", "java", "javac", "tsc" }
+
+  for _, tool in ipairs(tool_candidates) do
+    if vim.fn.executable(tool) == 1 then
+      table.insert(tools, tool)
+    end
+  end
+
+  return tools
+end
+
+
 return M

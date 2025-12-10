@@ -65,4 +65,52 @@ function M.recommend_modules()
   return recommendations
 end
 
+--- Detects potential conflicts between enabled modules.
+-- @return table A list of conflict description strings.
+function M.detect_plugin_conflicts()
+  local conflicts = {}
+  local all_modules = registry.get_all_module_specs()
+  local enabled_modules = {}
+
+  for name, spec in pairs(all_modules) do
+    if spec.enabled_by_default ~= false then
+      table.insert(enabled_modules, name)
+    end
+  end
+
+  -- Conflict check example: multiple Git modules
+  local git_modules = {}
+  for _, name in ipairs(enabled_modules) do
+    if name:match("^git.") then
+      table.insert(git_modules, name)
+    end
+  end
+  if #git_modules > 1 then
+    table.insert(
+      conflicts,
+      "Multiple Git modules are enabled (" .. table.concat(git_modules, ", ") .. "). This may cause unexpected behavior."
+    )
+  end
+
+  -- Conflict check example: multiple fuzzy finders
+  local fuzzy_finders = {}
+  local fuzzy_map = {
+    ["files.fuzzy"] = "fzf",
+  }
+  for _, name in ipairs(enabled_modules) do
+    if fuzzy_map[name] then
+      table.insert(fuzzy_finders, fuzzy_map[name])
+    end
+  end
+  if #fuzzy_finders > 1 then
+    table.insert(
+      conflicts,
+      "Multiple fuzzy finders detected (" .. table.concat(fuzzy_finders, ", ") .. "). Consider choosing one."
+    )
+  end
+
+  return conflicts
+end
+
+
 return M
