@@ -17,16 +17,18 @@ local function init_lazy(plugins)
 end
 
 function M.Load()
-	-- 1. Discover modules
-	local registry = require("nvcraft.core.registry")
-	registry.setup()
+	-- 1. Initialize lazy.nvim with essential plugins first (like luarocks)
+	local luarocks_spec = require("nvcraft.modules.base.luarocks")
+	init_lazy(luarocks_spec.plugins)
 
-	-- 2. Load modules and collect plugins
-	local loader = require("nvcraft.core.loader")
-	local plugins = loader.load_modules()
+	-- 2. Now that lazy is setup, discover and load all other modules
+	vim.schedule(function()
+		local registry = require("nvcraft.core.registry")
+		registry.setup()
 
-	-- 3. Initialize lazy.nvim with the collected plugins
-	init_lazy(plugins)
+		local loader = require("nvcraft.core.loader")
+		loader.load_modules()
+	end)
 end
 
 return M
