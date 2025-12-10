@@ -15,7 +15,7 @@ return {
     {
       "vhyrro/luarocks.nvim",
       opts = {
-        rocks = { "lyaml" },
+        rocks = { "lyaml", "schema-validation" },
       },
     },
   },
