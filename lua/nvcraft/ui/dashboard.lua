@@ -63,6 +63,8 @@ function M.setup()
     NuiLine("  [m] Module Manager"),
     NuiLine("  [c] Config Editor"),
     NuiLine("  [h] Health Check"),
+    NuiLine("  [s] Smart Recommend"),
+    NuiLine("  [o] Optimize"),
   }
 
   -- Statistics
@@ -137,6 +139,16 @@ function M.setup()
   popup:map("n", "c", function()
     popup:unmount()
     config_editor.setup()
+  end)
+
+  popup:map("n", "s", function()
+    popup:unmount()
+    vim.cmd("NvCraftSmartRecommend")
+  end)
+
+  popup:map("n", "o", function()
+    popup:unmount()
+    vim.cmd("NvCraftOptimize")
   end)
 
   -- Project switching keymaps
