@@ -165,64 +165,30 @@ end
 
 function M.load_modules()
 	local modules_to_load = registry.get_modules()
-	local all_plugins = {}
-	local lazy_load_triggers = {}
 
 	for _, module_name in ipairs(modules_to_load) do
+		-- Skip the luarocks module as it's already loaded
+		if module_name == "base.luarocks" then
+			goto continue
+		end
+
 		local spec = registry.get_module_spec(module_name)
 		if spec then
-			-- Always collect plugins for lazy.nvim to handle
-			for _, plugin in ipairs(spec.plugins or {}) do
-				table.insert(all_plugins, plugin)
+			-- Let lazy.nvim handle the setup and lazy-loading of the plugins
+			if spec.plugins and #spec.plugins > 0 then
+				require("lazy").add(spec.plugins)
 			end
 
-			if spec.lazy then
-				-- Handle lazy loading triggers
-				if spec.trigger and spec.trigger.event then
-					local events = type(spec.trigger.event) == "table" and spec.trigger.event or { spec.trigger.event }
-					for _, event in ipairs(events) do
-						table.insert(lazy_load_triggers, {
-							event = event,
-							pattern = spec.trigger.pattern or "*",
-							module = module_name,
-						})
-					end
-				end
-				if spec.trigger and spec.trigger.cmd then
-					-- Create a command that loads the module
-					local cmds = type(spec.trigger.cmd) == "table" and spec.trigger.cmd or { spec.trigger.cmd }
-					for _, cmd in ipairs(cmds) do
-						vim.api.nvim_create_user_command(cmd, function()
-							M.load_module(module_name)
-						end, {})
-					end
-				end
-			else
-				-- Load immediately
-				M.load_module(module_name)
-			end
+			-- The rest of the module setup (keys, autocmds) can be done here,
+			-- assuming they don't depend on a plugin being loaded.
+			-- For simplicity, we'll assume lazy.nvim's handlers are sufficient.
+			M.load_module(module_name)
 		else
 			failed_modules[module_name] = true
 			vim.notify("Could not find module specification for: " .. module_name, vim.log.levels.ERROR)
 		end
+		::continue::
 	end
-
-	-- Setup autocmds for lazy loading modules
-	if #lazy_load_triggers > 0 then
-		local lazy_loader_group = vim.api.nvim_create_augroup("NvCraftLazyLoader", { clear = true })
-		for _, trigger in ipairs(lazy_load_triggers) do
-			vim.api.nvim_create_autocmd(trigger.event, {
-				group = lazy_loader_group,
-				pattern = trigger.pattern,
-				callback = function()
-					M.load_module(trigger.module)
-				end,
-				once = true,
-			})
-		end
-	end
-
-	return all_plugins
 end
 
 return M
