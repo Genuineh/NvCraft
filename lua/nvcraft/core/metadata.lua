@@ -6,7 +6,7 @@ local M = {}
 -- @return (table|nil) The module specification table, or nil if loading fails.
 function M.get_module_spec(module_name)
 	-- Corrected path to modules
-	local module_path = "nvcraft.core.modules." .. module_name
+	local module_path = "nvcraft.modules." .. module_name
 	local ok, module_spec = pcall(require, module_path)
 
 	if not ok then
