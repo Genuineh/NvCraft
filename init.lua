@@ -19,3 +19,12 @@ end, {})
 vim.api.nvim_create_user_command("NvCraftHealth", function()
   require("nvcraft.ui.health").setup()
 end, {})
+
+-- First time setup wizard
+vim.defer_fn(function()
+  local config_manager = require("nvcraft.config.manager")
+  local core_config = config_manager.get_config("nvcraft.core")
+  if not core_config or not core_config.wizard_completed then
+    require("nvcraft.ui.wizard").setup()
+  end
+end, 100)
