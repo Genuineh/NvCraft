@@ -4,8 +4,25 @@ local M = {}
 local storage = require("nvcraft.config.storage")
 local util = require("nvcraft.util")
 local schema_def = require("nvcraft.config.schema")
-local validator = require("schema-validation").new()
 local migration = require("nvcraft.config.migration")
+
+local validator = nil -- Defer initialization
+
+local function get_validator()
+	if not validator then
+		-- This will be called only when validation is actually needed,
+		-- which should be after luarocks.nvim has done its job.
+		local ok, val = pcall(require, "schema-validation")
+		if ok then
+			validator = val.new()
+		else
+			vim.notify("Could not load 'schema-validation'. Please restart Neovim.", vim.log.levels.ERROR)
+			-- Return a dummy validator to prevent further errors
+			validator = { validate = function() return true end }
+		end
+	end
+	return validator
+end
 
 -- Configuration file paths
 local config_paths = {
@@ -102,7 +119,8 @@ end
 -- @param config (table) The configuration to validate.
 -- @return (boolean) True if the config is valid, false otherwise.
 function M.validate_config(config)
-  local ok, errors = validator:validate(config, schema_def.schema)
+  local v = get_validator()
+  local ok, errors = v:validate(config, schema_def.schema)
   if not ok then
     local error_messages = {}
     for _, err in ipairs(errors) do
