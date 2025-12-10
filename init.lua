@@ -4,6 +4,9 @@ local COREPATH = "nvcraft.core"
 local core = require(COREPATH .. ".init")
 core.Load(COREPATH)
 
+-- Load the adaptive module to setup its autocmds
+require("nvcraft.smart.adaptive")
+
 vim.api.nvim_create_user_command("NvCraftModuleManager", function()
   require("nvcraft.ui.module_manager").setup()
 end, {})
@@ -18,6 +21,27 @@ end, {})
 
 vim.api.nvim_create_user_command("NvCraftHealth", function()
   require("nvcraft.ui.health").setup()
+end, {})
+
+vim.api.nvim_create_user_command("NvCraftSmartRecommend", function()
+  local detector = require("nvcraft.smart.detector")
+  local recommender = require("nvcraft.smart.recommender")
+
+  local project_types = detector.detect_project_type()
+  local languages = detector.detect_languages()
+  local recommendations = recommender.recommend_modules()
+
+  vim.notify(
+    "Project Types: " .. table.concat(project_types, ", ") .. "\n" ..
+    "Languages: " .. table.concat(languages, ", ") .. "\n" ..
+    "Recommended Modules: " .. table.concat(recommendations, ", "),
+    vim.log.levels.INFO,
+    { title = "NvCraft Smart Recommendations" }
+  )
+end, {})
+
+vim.api.nvim_create_user_command("NvCraftOptimize", function()
+  require("nvcraft.smart.optimizer").show_suggestions()
 end, {})
 
 -- First time setup wizard
