@@ -24,13 +24,14 @@ local function publish(event, async, ...)
 		return a.priority < b.priority
 	end)
 
+	local args = { ... }
 	for _, subscriber in ipairs(sorted_subscribers) do
 		if async then
 			vim.schedule(function()
-				subscriber.callback(...)
+				subscriber.callback(unpack(args))
 			end)
 		else
-			subscriber.callback(...)
+			subscriber.callback(unpack(args))
 		end
 	end
 end
