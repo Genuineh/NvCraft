@@ -21,6 +21,29 @@ return {
 
 	-- 设置函数
   setup = function(_opts)
+    -- Initialize recent projects list
+    if vim.g.nvcraft_recent_projects == nil then
+      vim.g.nvcraft_recent_projects = {}
+    end
+
+    -- Add current directory to recent projects
+    local cwd = vim.fn.getcwd()
+    local recent_projects = vim.g.nvcraft_recent_projects
+    -- Avoid duplicates
+    for i, project in ipairs(recent_projects) do
+      if project == cwd then
+        table.remove(recent_projects, i)
+        break
+      end
+    end
+    table.insert(recent_projects, 1, cwd)
+
+    -- Keep the list at a reasonable size
+    while #recent_projects > 10 do
+      table.remove(recent_projects)
+    end
+    vim.g.nvcraft_recent_projects = recent_projects
+
 		local opt = vim.opt
 
 		vim.g.mapleader = " "

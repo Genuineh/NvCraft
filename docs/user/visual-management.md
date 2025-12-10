@@ -26,11 +26,17 @@ The Dashboard is the central hub for your NvCraft environment, providing quick a
 
 - **Command:** `:NvCraftDashboard`
 - **Features:**
-  - Displays a summary of the system's health status.
-  - Provides a "Quick Actions" panel with shortcuts:
+  - Displays a startup logo and a summary of the system's health status.
+  - **Quick Actions Panel:**
     - `m`: Open Module Manager
     - `c`: Open Config Editor
     - `h`: Open Health Check
+  - **Statistics Panel:**
+    - Shows the number of loaded modules.
+    - Displays the Neovim startup time.
+  - **Recent Projects Panel:**
+    - Lists recently opened projects.
+    - Press a number key (`1`-`9`) to switch to that project directory.
 
 ## Health Check
 
@@ -38,5 +44,6 @@ The Health Check panel helps you diagnose issues and monitor the status of your 
 
 - **Command:** `:NvCraftHealth`
 - **Features:**
-  - Checks the Neovim version for compatibility.
-  - Runs health checks for all registered modules that provide a `health_check` function.
+  - **System Health:** Checks Neovim version and runs health checks for all registered modules.
+  - **Performance Analysis:** Reports the Neovim startup time.
+  - **Problem Diagnostics:** A section for future diagnostic tools.

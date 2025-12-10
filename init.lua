@@ -1,3 +1,5 @@
+vim.g.nvcraft_start_time = vim.v.t_start
+
 local COREPATH = "nvcraft.core"
 local core = require(COREPATH .. ".init")
 core.Load(COREPATH)
