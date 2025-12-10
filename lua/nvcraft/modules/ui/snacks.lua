@@ -35,26 +35,26 @@ local dashboard_opt = {
 }
 
 return {
-	"folke/snacks.nvim",
-	priority = 1000,
-	lazy = false,
-	---@type snacks.Config
-	opts = {
-		-- your configuration comes here
-		-- or leave it empty to use the default settings
-		-- refer to the configuration section below
-		-- bigfile = { enabled = true },
-		dashboard = { enabled = true, preset = dashboard_opt },
-		-- terminal = { enabled = true },
-		-- explorer = { enabled = true },
-		-- indent = { enabled = true },
-		-- input = { enabled = true },
-		-- picker = { enabled = true },
-		-- notifier = { enabled = true },
-		-- quickfile = { enabled = true },
-		-- scope = { enabled = true },
-		-- scroll = { enabled = true },
-		-- statuscolumn = { enabled = true },
-		-- words = { enabled = true },
-	},
+  name = "snacks",
+  version = "1.0.0",
+  description = "UI enhancements for Neovim.",
+  category = "ui",
+  dependencies = {},
+  meta = {
+    author = "NvCraft",
+    homepage = "https://github.com/NvCraft/NvCraft",
+    tags = { "snacks", "ui" },
+    enabled_by_default = true,
+  },
+  config_schema = {},
+  plugins = {
+    {
+      "folke/snacks.nvim",
+      priority = 1000,
+      lazy = false,
+      opts = {
+        dashboard = { enabled = true, preset = dashboard_opt },
+      },
+    },
+  },
 }
