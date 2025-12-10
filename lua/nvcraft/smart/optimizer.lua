@@ -9,34 +9,30 @@ function M.get_optimization_suggestions()
   local report = profiler.get_performance_report()
   local suggestions = {}
 
-  -- Suggestion 1: Check for slow plugins
+  -- Suggestion 1: More specific advice for slow plugins
   if #report.slow_plugins > 0 then
-    local slow_plugin_names = {}
     for _, p in ipairs(report.slow_plugins) do
-      table.insert(slow_plugin_names, p.name)
+      local suggestion = string.format(
+        "Plugin '%s' took %.2fms to load. If you don't need it at startup, consider lazy-loading it on an event, command, or keymap.",
+        p.name,
+        p.load_time
+      )
+      table.insert(suggestions, suggestion)
     end
-    table.insert(
-      suggestions,
-      "The following plugins are loading slowly (>20ms): "
-        .. table.concat(slow_plugin_names, ", ")
-        .. ". Consider lazy-loading them on keymaps or events if you don't need them at startup."
-    )
   end
 
-  -- Suggestion 2: Check for unused modules
-  -- This is a more complex feature. For now, we'll just add a placeholder suggestion.
-  -- A real implementation would need to track module usage over time.
-  local all_modules = registry.get_all_module_specs()
-  if #all_modules > 20 then -- Arbitrary number
-    table.insert(
-      suggestions,
-      "You have many modules enabled. Consider disabling any you don't use regularly via the Module Manager."
-    )
+  -- Suggestion 2: Combine with recommender's usage-based suggestions
+  local usage_suggestions = require("nvcraft.smart.recommender").optimize_config_by_usage()
+  for _, s in ipairs(usage_suggestions) do
+    table.insert(suggestions, s)
   end
 
-  -- Suggestion 3: General advice on lazy loading
-  if #report.slow_plugins == 0 and #suggestions == 0 then
-    table.insert(suggestions, "Performance seems good! For even faster startup, ensure most plugins are lazy-loaded.")
+  -- Suggestion 3: General advice if no other issues are found
+  if #suggestions == 0 then
+    table.insert(
+      suggestions,
+      "Overall performance is good. You can always review your enabled modules with `:NvCraftModuleManager`."
+    )
   end
 
   return suggestions
@@ -59,15 +55,26 @@ function M.show_suggestions()
 end
 
 --- Manages plugin cache, offering options to clean it.
--- @param action string Can be "clean" to clear the cache.
+-- @param action string Can be "clean" or "clean_all".
 function M.manage_cache(action)
-  if action == "clean" then
+  if action == "clean" or action == "clean_all" then
     if package.loaded["lazy"] then
       require("lazy").clean()
       vim.notify("Cleared lazy.nvim cache.", vim.log.levels.INFO, { title = "NvCraft Optimizer" })
     else
       vim.notify("lazy.nvim is not available to clean.", vim.log.levels.WARN, { title = "NvCraft Optimizer" })
     end
+  end
+
+  if action == "clean_all" then
+    -- Also clean plenary cache if it exists
+    pcall(function()
+      local plenary_cache = require("plenary.path").new(vim.fn.stdpath("cache"), "plenary")
+      if plenary_cache:exists() then
+        plenary_cache:rmrf()
+        vim.notify("Cleared plenary.nvim cache.", vim.log.levels.INFO, { title = "NvCraft Optimizer" })
+      end
+    end)
   end
 end
 

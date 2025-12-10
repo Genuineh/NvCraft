@@ -113,4 +113,34 @@ function M.detect_plugin_conflicts()
 end
 
 
+--- Provides configuration optimization suggestions based on usage habits.
+-- This is a placeholder for a more complex implementation that would track feature usage.
+-- @return table A list of suggestion strings.
+function M.optimize_config_by_usage()
+  local suggestions = {}
+  local all_modules = registry.get_all_module_specs()
+
+  -- Simple check: if a user has many modules, suggest a review.
+  local enabled_count = 0
+  for _, spec in pairs(all_modules) do
+    if spec.enabled_by_default ~= false then
+      enabled_count = enabled_count + 1
+    end
+  end
+
+  if enabled_count > 15 then -- Arbitrary threshold for "many" modules
+    table.insert(
+      suggestions,
+      "You have "
+        .. enabled_count
+        .. " modules enabled. Review them with `:NvCraftModuleManager` to disable any you don't use."
+    )
+  end
+
+  -- Future idea: track command usage frequency or LSP client attachments
+  -- to suggest disabling unused features within modules.
+
+  return suggestions
+end
+
 return M

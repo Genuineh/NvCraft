@@ -24,19 +24,43 @@ end
 
 
 --- Adapts LSP server configurations based on detected toolchain.
+--- Adapts LSP server configurations based on filetype and installed servers.
 local function adapt_lsp(context)
-  -- This is a placeholder for a more complex implementation.
-  -- A real implementation would interact with the lsp.servers module config.
-  local toolchain = require("nvcraft.smart.detector").detect_toolchain()
-  local tool_set = {}
-  for _, tool in ipairs(toolchain) do
-    tool_set[tool] = true
+  local filetype = context.filetype
+  if not filetype then
+    return
   end
 
-  if context.filetype == "typescript" and not tool_set["tsc"] then
+  -- Map filetypes to required LSP servers
+  local lsp_servers = {
+    lua = "lua_ls",
+    python = "pyright",
+    typescript = "tsserver",
+    javascript = "tsserver",
+    rust = "rust_analyzer",
+    go = "gopls",
+    cpp = "clangd",
+    c = "clangd",
+  }
+
+  local required_server = lsp_servers[filetype]
+  if not required_server then
+    return
+  end
+
+  -- Check if the server is installed via Mason
+  local mason_registry = require("mason-registry")
+  local pkg = mason_registry.get_package(required_server)
+  if not pkg or not pkg:is_installed() then
     vim.notify(
-      "TypeScript file opened, but 'tsc' (TypeScript compiler) not found in your PATH.",
-      vim.log.levels.WARN
+      string.format(
+        "LSP server '%s' for filetype '%s' is not installed. Run `:MasonInstall %s` to install it.",
+        required_server,
+        filetype,
+        required_server
+      ),
+      vim.log.levels.WARN,
+      { title = "NvCraft Adaptive LSP" }
     )
   end
 end
