@@ -4,14 +4,7 @@ return {
   description = "Defines NvCraft user commands.",
   category = "base",
   dependencies = {
-    "ui.module_manager",
-    "ui.config_editor",
     "ui.dashboard",
-    "ui.health",
-    "smart.detector",
-    "smart.recommender",
-    "smart.optimizer",
-    "ui.wizard",
   },
   meta = {
     author = "NvCraft",

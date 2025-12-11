@@ -95,7 +95,7 @@ return {
   version = "1.0.0",
   description = "Project management for Neovim.",
   category = "files",
-  dependencies = { "fzf" },
+  dependencies = { "fuzzy" },
   meta = {
     author = "NvCraft",
     homepage = "https://github.com/NvCraft/NvCraft",

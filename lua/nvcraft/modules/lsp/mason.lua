@@ -1,84 +1,84 @@
 local default_on_attach = function(client, buf)
-	local opts = { buffer = buf }
-	vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions jump1=true ignore_current_line=true<cr>", opts)
-	vim.keymap.set("n", "gD", "<cmd>FzfLua lsp_declarations jump1=true ignore_current_line=true<cr>", opts)
-	vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true<cr>", opts)
-	vim.keymap.set("n", "gi", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", opts)
-	vim.keymap.set("n", "gy", "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true<cr>", opts)
+  local opts = { buffer = buf }
+  vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions jump1=true ignore_current_line=true<cr>", opts)
+  vim.keymap.set("n", "gD", "<cmd>FzfLua lsp_declarations jump1=true ignore_current_line=true<cr>", opts)
+  vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true<cr>", opts)
+  vim.keymap.set("n", "gi", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", opts)
+  vim.keymap.set("n", "gy", "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true<cr>", opts)
 
-	if client.name == "omnisharp" then
-		vim.keymap.set("n", "gd", function()
-			require("omnisharp_extended").lsp_definitions()
-		end, opts)
-	else
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-	end
-	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-	vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-	vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
-	vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
-	vim.keymap.set("n", "<leader>wl", function()
-		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-	end, opts)
-	vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-	vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-	vim.keymap.set("n", "<leader>f", function()
-		vim.lsp.buf.format({ async = true })
-	end, opts)
+  if client.name == "omnisharp" then
+    vim.keymap.set("n", "gd", function()
+      require("omnisharp_extended").lsp_definitions()
+    end, opts)
+  else
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  end
+  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+  vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+  vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+  vim.keymap.set("n", "<leader>wl", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, opts)
+  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+  vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "<leader>f", function()
+    vim.lsp.buf.format({ async = true })
+  end, opts)
 
-	if client.name == "roslyn" or client.name == "roslyn_ls" then
-		vim.api.nvim_create_autocmd("InsertCharPre", {
-			desc = "Roslyn: Trigger an auto insert on '/'.",
-			buffer = buf,
-			callback = function()
-				local char = vim.v.char
-				if char ~= "/" then
-					return
-				end
-				local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-				row, col = row - 1, col + 1
-				local uri = vim.uri_from_bufnr(buf)
-				local params = {
-					_vs_textDocument = { uri = uri },
-					_vs_position = { line = row, character = col },
-					_vs_ch = char,
-					_vs_options = {
-						tabSize = vim.bo[buf].tabstop,
-						insertSpaces = vim.bo[buf].expandtab,
-					},
-				}
-				vim.defer_fn(function()
-					client:request(
-						"textDocument/_vs_onAutoInsert",
-						params,
-						function(err, result, _)
-							if err or not result then
-								return
-							end
-							vim.snippet.expand(result._vs_textEdit.newText)
-						end,
-						buf
-					)
-				end, 1)
-			end,
-		})
+  if client.name == "roslyn" or client.name == "roslyn_ls" then
+    vim.api.nvim_create_autocmd("InsertCharPre", {
+      desc = "Roslyn: Trigger an auto insert on '/'.",
+      buffer = buf,
+      callback = function()
+        local char = vim.v.char
+        if char ~= "/" then
+          return
+        end
+        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+        row, col = row - 1, col + 1
+        local uri = vim.uri_from_bufnr(buf)
+        local params = {
+          _vs_textDocument = { uri = uri },
+          _vs_position = { line = row, character = col },
+          _vs_ch = char,
+          _vs_options = {
+            tabSize = vim.bo[buf].tabstop,
+            insertSpaces = vim.bo[buf].expandtab,
+          },
+        }
+        vim.defer_fn(function()
+          client:request(
+            "textDocument/_vs_onAutoInsert",
+            params,
+            function(err, result, _)
+              if err or not result then
+                return
+              end
+              vim.snippet.expand(result._vs_textEdit.newText)
+            end,
+            buf
+          )
+        end, 1)
+      end,
+    })
 
-		vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-			pattern = "*",
-			callback = function()
-				local clients = vim.lsp.get_clients({ name = "roslyn" })
-				if not clients or #clients == 0 then
-					return
-				end
-				local buffers = vim.lsp.get_buffers_by_client_id(client.request)
-				for _, buffer_id in ipairs(buffers) do
-					local params = { textDocument = vim.lsp.util.make_text_document_params(buffer_id) }
-					client:request("textDocument/diagnostic", params, nil, buffer_id)
-				end
-			end,
-		})
-	end
+    vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+      pattern = "*",
+      callback = function()
+        local clients = vim.lsp.get_clients({ name = "roslyn" })
+        if not clients or #clients == 0 then
+          return
+        end
+        local buffers = vim.lsp.get_buffers_by_client_id(client.request)
+        for _, buffer_id in ipairs(buffers) do
+          local params = { textDocument = vim.lsp.util.make_text_document_params(buffer_id) }
+          client:request("textDocument/diagnostic", params, nil, buffer_id)
+        end
+      end,
+    })
+  end
 end
 
 return {
