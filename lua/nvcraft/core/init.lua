@@ -19,7 +19,7 @@ function M.Load()
 		{
 			"vhyrro/luarocks.nvim",
 			opts = {
-				rocks = { "lyaml", "schema-validation" },
+				rocks = { "lyaml", "penlight" },
 			},
 		},
 		-- Then, define our local core loader which depends on it.
