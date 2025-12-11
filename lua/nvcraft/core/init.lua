@@ -22,7 +22,7 @@ function M.Load()
 			},
 		},
 		{
-			"NvCraft/core-loader",
+			name = "nvcraft-core-loader",
 			dependencies = { "luarocks.nvim" },
 			config = function()
 				-- Now that luarocks.nvim is loaded, we can safely require modules that need it.
