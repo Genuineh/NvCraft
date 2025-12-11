@@ -33,7 +33,7 @@ function M.generate_plugin_specs()
 		-- 1. Add the actual plugins defined in the module
 		local module_plugin_names = {}
 		if spec.plugins and #spec.plugins > 0 then
-			for _, plugin_spec in ipairs(spec.plugins)
+			for _, plugin_spec in ipairs(spec.plugins) do
 				table.insert(all_plugin_specs, plugin_spec)
 				-- Keep track of plugin names to use in dependencies
 				if type(plugin_spec) == "table" and type(plugin_spec[1]) == "string" then
