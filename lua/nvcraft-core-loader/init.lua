@@ -20,5 +20,8 @@ return {
     else
       vim.notify("Failed to setup NvCraft user commands.", vim.log.levels.ERROR)
     end
+
+    -- After adding all plugins dynamically, we need to tell lazy to process them.
+    require("lazy").sync({ notify = false })
   end,
 }
