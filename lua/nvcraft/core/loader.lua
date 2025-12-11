@@ -1,24 +1,31 @@
--- This file is responsible for translating the NvCraft module format
--- into a format that lazy.nvim can understand and manage.
+-- This file is responsible for discovering all NvCraft modules and translating
+-- them into a single, complete list of lazy.nvim plugin specifications.
 local M = {}
 
 local registry = require("nvcraft.core.registry")
-local failed_modules = {}
 
---- Translates NvCraft module specs into lazy.nvim plugin specs and adds them.
-function M.load_modules()
+--- Discovers all modules and returns a list of lazy.nvim plugin specs.
+-- @return table A list of plugin specifications for lazy.nvim.
+function M.generate_plugin_specs()
+	-- First, discover all modules to build the registry.
+	registry.setup()
 	local modules_to_load = registry.get_modules()
 	local all_plugin_specs = {}
 
-	for _, module_name in ipairs(modules_to_load) do
-		-- Skip the special modules that are handled by the core loader itself.
-		if module_name == "base.luarocks" or module_name == "base.commands" then
-			goto continue
-		end
+	-- Manually add essential plugins like luarocks first.
+	table.insert(
+		all_plugin_specs,
+		{
+			"vhyrro/luarocks.nvim",
+			opts = {
+				rocks = { "lyaml", "penlight" },
+			},
+		}
+	)
 
+	for _, module_name in ipairs(modules_to_load) do
 		local spec = registry.get_module_spec(module_name)
 		if not spec then
-			failed_modules[module_name] = true
 			vim.notify("Could not find module specification for: " .. module_name, vim.log.levels.ERROR)
 			goto continue
 		end
@@ -26,7 +33,7 @@ function M.load_modules()
 		-- 1. Add the actual plugins defined in the module
 		local module_plugin_names = {}
 		if spec.plugins and #spec.plugins > 0 then
-			for _, plugin_spec in ipairs(spec.plugins) do
+			for _, plugin_spec in ipairs(spec.plugins)
 				table.insert(all_plugin_specs, plugin_spec)
 				-- Keep track of plugin names to use in dependencies
 				if type(plugin_spec) == "table" and type(plugin_spec[1]) == "string" then
@@ -62,18 +69,10 @@ function M.load_modules()
 			}
 			table.insert(all_plugin_specs, runtime_spec)
 		end
-
 		::continue::
 	end
 
-	-- Add all the generated specs to lazy.nvim at once
-	if #all_plugin_specs > 0 then
-		require("lazy").add(all_plugin_specs)
-	end
-
-	-- After adding all plugins dynamically, we need to tell lazy to process them
-	-- and load any that should have been loaded on startup events.
-	require("lazy").sync({ notify = false })
+	return all_plugin_specs
 end
 
 return M
