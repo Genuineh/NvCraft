@@ -70,6 +70,10 @@ function M.load_modules()
 	if #all_plugin_specs > 0 then
 		require("lazy").add(all_plugin_specs)
 	end
+
+	-- After adding all plugins dynamically, we need to tell lazy to process them
+	-- and load any that should have been loaded on startup events.
+	require("lazy").sync({ notify = false })
 end
 
 return M
