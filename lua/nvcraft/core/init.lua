@@ -23,27 +23,8 @@ function M.Load()
 			},
 		},
 		-- Then, define our local core loader which depends on it.
-		-- This is a local plugin spec, not a remote repository.
-		{
-			name = "nvcraft-core",
-			dependencies = { "vhyrro/luarocks.nvim" },
-			config = function()
-				-- By the time this runs, luarocks.nvim is ready.
-				local registry = require("nvcraft.core.registry")
-				registry.setup()
-
-				local loader = require("nvcraft.core.loader")
-				loader.load_modules()
-
-				-- And finally, setup the commands module now that everything else is loaded.
-				local ok, commands_mod = pcall(require, "nvcraft.modules.base.commands")
-				if ok and commands_mod.setup then
-					commands_mod.setup()
-				else
-					vim.notify("Failed to setup NvCraft user commands.", vim.log.levels.ERROR)
-				end
-			end,
-		},
+		-- lazy.nvim will find this directory in our `lua` folder.
+		{ "nvcraft-core-loader", dir = vim.fn.stdpath("config") .. "/lua/nvcraft-core-loader" },
 	})
 end
 
