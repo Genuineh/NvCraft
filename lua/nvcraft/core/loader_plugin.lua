@@ -4,7 +4,7 @@ return {
   dependencies = { "vhyrro/luarocks.nvim" },
   config = function()
     -- By the time this function runs, lazy.nvim guarantees that all dependencies,
-    - - including luarocks.nvim and its installed rocks, are ready.
+    -- including luarocks.nvim and its installed rocks, are ready.
 
     -- Now, we can safely initialize the rest of NvCraft.
     local registry = require("nvcraft.core.registry")
