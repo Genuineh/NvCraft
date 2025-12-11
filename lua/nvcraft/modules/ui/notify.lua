@@ -3,7 +3,7 @@ return {
   version = "1.0.0",
   description = "A notification manager for Neovim.",
   category = "ui",
-  dependencies = {},
+  dependencies = { "tools.treesitter" },
   meta = {
     author = "NvCraft",
     homepage = "https://github.com/NvCraft/NvCraft",
