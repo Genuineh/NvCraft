@@ -14,8 +14,7 @@ function M.Load()
 	end
 	vim.opt.rtp:prepend(lazypath)
 
-	-- Define all plugins, including our local core loader
-	local plugins = {
+	require("lazy").setup({
 		-- First, define the dependency
 		{
 			"vhyrro/luarocks.nvim",
@@ -23,12 +22,29 @@ function M.Load()
 				rocks = { "lyaml", "schema-validation" },
 			},
 		},
-		-- Then, define our core loader which depends on it.
-		-- lazy.nvim will automatically load this from the runtime path.
-		require("nvcraft.core.loader_plugin"),
-	}
+		-- Then, define our local core loader which depends on it.
+		-- This is a local plugin spec, not a remote repository.
+		{
+			name = "nvcraft-core",
+			dependencies = { "vhyrro/luarocks.nvim" },
+			config = function()
+				-- By the time this runs, luarocks.nvim is ready.
+				local registry = require("nvcraft.core.registry")
+				registry.setup()
 
-	require("lazy").setup(plugins)
+				local loader = require("nvcraft.core.loader")
+				loader.load_modules()
+
+				-- And finally, setup the commands module now that everything else is loaded.
+				local ok, commands_mod = pcall(require, "nvcraft.modules.base.commands")
+				if ok and commands_mod.setup then
+					commands_mod.setup()
+				else
+					vim.notify("Failed to setup NvCraft user commands.", vim.log.levels.ERROR)
+				end
+			end,
+		},
+	})
 end
 
 return M
