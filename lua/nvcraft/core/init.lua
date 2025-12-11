@@ -22,7 +22,7 @@ function M.Load()
 			},
 			config = function(_, opts)
 				-- Setup luarocks before doing anything else
-				require("luarocks.nvim").setup(opts)
+				require("luarocks").setup(opts)
 
 				-- Now that luarocks.nvim is loaded and configured, we can safely
 				-- proceed with loading the rest of NvCraft.
